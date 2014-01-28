@@ -10,6 +10,8 @@ namespace NStack
 	public class Context
 	{
 
+
+
 		//Creates a new context
 		public static void Create(Action act)
 		{
@@ -49,7 +51,7 @@ namespace NStack
 			//Fail in has no context
 			if (context == null)
 			{
-				throw new Exception ("Out of context call");
+				throw new OutOfContextException (typeof(T));
 			}
 
 			try 
@@ -60,7 +62,7 @@ namespace NStack
 			catch
 			{
 				//or fail
-				throw new Exception ("Service not found");
+				throw new IrresolvableServiceException (typeof(T));
 			}
 		}
 
@@ -91,7 +93,7 @@ namespace NStack
 			//Fail in has no context
 			if (context == null)
 			{
-				throw new Exception ("Out of context call");
+				throw new OutOfContextException (null);
 			}
 
 			//Return an action that previously create preserved context
@@ -109,7 +111,7 @@ namespace NStack
 				//Fail in has no context
 				if (context == null)
 				{
-					throw new Exception ("Out of context call");
+					throw new OutOfContextException (typeof(T));
 				}
 
 				try 
@@ -120,7 +122,7 @@ namespace NStack
 				catch(Exception)
 				{
 					//Fail if is already registred
-					throw new Exception ("Duplicated service registration");
+					throw new DuplicatedServiceRegistrationException (typeof(T));
 				}
 			}
 		}
@@ -167,6 +169,54 @@ namespace NStack
 				{
 					contexts.Remove (dynamicMethod.Name);
 				}
+			}
+		}
+
+		public class ContextException : Exception
+		{
+			public ContextException(Type type, string message): base(message)
+			{
+			}
+
+			public Type TargetService { get; private set; }
+		}
+
+		public class OutOfContextException : ContextException
+		{
+			public OutOfContextException(Type type):base(type, "There is no context defined for the current call.")
+			{
+			}
+		}
+
+		public class DuplicatedServiceRegistrationException : ContextException
+		{
+			public DuplicatedServiceRegistrationException(Type type) : 
+			base(
+				type,
+				string.Format(
+					"The service '{0}' in assembly '{1}' is already registered in the current context.",
+					type.FullName,
+					type.Assembly.GetName().Name
+				)
+			)
+			{
+
+			}
+		}
+
+		public class IrresolvableServiceException : ContextException
+		{
+			public IrresolvableServiceException(Type type) : 
+				base(
+				type,
+					string.Format(
+						"The service '{0}' in assembly '{1}' is not registered in the current context.",
+					type.FullName,
+					type.Assembly.GetName().Name
+					)
+				)
+			{
+
 			}
 		}
 	}

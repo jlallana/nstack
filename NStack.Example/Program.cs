@@ -59,9 +59,40 @@ namespace NStack.Example
 	{
 		public static void Main (string[] args)
 		{
+
+			//Exceptions
+			try
+			{
+				Context.Resolve<int> ();
+			}
+			catch(Context.OutOfContextException ex)
+			{
+				Console.WriteLine(ex.Message);
+			}
+
 			Context.Create (() => {
 
+				try
+				{
+					Context.Resolve<int> ();
+				}
+				catch(Context.IrresolvableServiceException ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
+
 				Context.Register<ILogger>(new ConsoleLogger());
+
+
+				try
+				{
+					Context.Register<ILogger>(new ConsoleLogger());
+				}
+				catch(Context.DuplicatedServiceRegistrationException ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
+
 
 				InjectedLoggerMethod("from first context");
 
@@ -88,6 +119,7 @@ namespace NStack.Example
 				).Start();
 
 			});
+		
 		}
 
 		static void InjectedLoggerMethod(string message)
