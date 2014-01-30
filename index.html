@@ -34,6 +34,105 @@
 <p>This site is under construction. Anyway, the project is active. You can obtain the latest version here compiled the project and its source code.</p>
 
 <pre><code>$ git clone https://github.com/jlallana/nstack</code></pre>
+
+
+
+            <style>
+                div.sourcecode * { font-size: 12px !important;
+    -moz-tab-size:    4;
+    -o-tab-size:      4;
+    -webkit-tab-size: 4;
+    -ms-tab-size:     4;
+    tab-size:         4;
+}
+
+
+
+            </style>
+            <!-- HTML generated using hilite.me -->
+            <div class="sourcecode" style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #0000ff">using</span> System;
+<span style="color: #0000ff">using</span> NStack;
+
+<span style="color: #008000">//Service description</span>
+<span style="color: #0000ff">interface</span> ILogger
+{
+	<span style="color: #0000ff">void</span> Info(<span style="color: #2b91af">string</span> message);
+}
+
+<span style="color: #008000">//Service helper (Optional for readability)</span>
+<span style="color: #0000ff">static</span> <span style="color: #0000ff">class</span> <span style="color: #2b91af">logger</span>
+{
+	<span style="color: #0000ff">public</span> <span style="color: #0000ff">static</span> ILogger Current
+	{
+		<span style="color: #0000ff">get</span>
+		{
+			<span style="color: #0000ff">return</span> Context.Resolve&lt;ILogger&gt; ();
+		}
+	}
+
+	<span style="color: #0000ff">public</span> <span style="color: #0000ff">static</span> <span style="color: #0000ff">void</span> Info(<span style="color: #2b91af">string</span> message)
+	{
+		Current.Info (message);
+	}
+}
+
+<span style="color: #008000">//Console service implementation</span>
+<span style="color: #0000ff">class</span> <span style="color: #2b91af">ConsoleLogger</span> : ILogger
+{
+	<span style="color: #0000ff">public</span> <span style="color: #0000ff">void</span> Info(<span style="color: #2b91af">string</span> message)
+	{
+		Console.WriteLine (<span style="color: #a31515">&quot;[INFO - {0}] {1}&quot;</span>, DateTime.Now, message);
+	}
+}
+
+<span style="color: #008000">//Void service implementation</span>
+<span style="color: #0000ff">class</span> <span style="color: #2b91af">VoidLogger</span> : ILogger
+{
+	<span style="color: #0000ff">public</span> <span style="color: #0000ff">void</span> Info(<span style="color: #2b91af">string</span> message)
+	{
+	}
+}
+
+<span style="color: #008000">//Consumer class</span>
+<span style="color: #0000ff">class</span> <span style="color: #2b91af">Server</span>
+{
+	<span style="color: #0000ff">public</span> <span style="color: #0000ff">void</span> Start()
+	{
+		<span style="color: #008000">//Using located service</span>
+		<span style="color: #2b91af">logger</span>.Info (<span style="color: #a31515">&quot;Server started!!!&quot;</span>);
+	}
+}
+
+<span style="color: #0000ff">class</span> <span style="color: #2b91af">Program</span>
+{
+	<span style="color: #0000ff">public</span> <span style="color: #0000ff">static</span> <span style="color: #0000ff">void</span> Main (<span style="color: #2b91af">string</span>[] args)
+	{
+		<span style="color: #2b91af">var</span> server = <span style="color: #0000ff">new</span> Server ();
+
+		<span style="color: #008000">//Starts calling to a console logger</span>
+		Context.Create (() =&gt; {
+
+			Context.Register&lt;ILogger&gt;(<span style="color: #0000ff">new</span> ConsoleLogger());
+
+			<span style="color: #008000">//Must puts message in console</span>
+			server.Start();
+
+		});
+
+		<span style="color: #008000">//Start calling to a void logger</span>
+		Context.Create (() =&gt; {
+
+			Context.Register&lt;ILogger&gt;(<span style="color: #0000ff">new</span> VoidLogger());
+
+			<span style="color: #008000">//Must do nothing</span>
+			server.Start();
+
+		});
+	}
+}
+</pre></div>
+
+
         </section>
 
         <aside id="sidebar">
@@ -47,6 +146,12 @@
           </a>
 
           <p class="repo-owner"><a href="https://github.com/jlallana/nstack"></a> Maintained by <a href="https://github.com/jlallana">jlallana</a>.</p>
+
+
+
+
+
+
         </aside>
       </div>
     </div>
