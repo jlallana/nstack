@@ -34,18 +34,11 @@ namespace Services
 	}
 
 	//Fake implementation with parameter expectation check
-	public class ExpectationLogger : ILogger
+	public class VoidLogger : ILogger
 	{
-		private string expectation;
-
-		public ExpectationLogger(string expectation)
-		{
-			this.expectation = expectation;
-		}
-
 		public void Warning (string message)
 		{
-			if (message != expectation)
+			if (message != "void")
 			{
 				throw new Exception ("expectation exception");
 			}
@@ -65,7 +58,7 @@ namespace NStack.Example
 			{
 				Context.Resolve<int> ();
 			}
-			catch(Context.OutOfContextException ex)
+			catch(Context.IrresolvableServiceException ex)
 			{
 				Console.WriteLine(ex.Message);
 			}
@@ -101,9 +94,9 @@ namespace NStack.Example
 
 					InjectedLoggerMethod("before override service");
 
-					Context.Register<ILogger>(new ExpectationLogger("expect"));
+					Context.Register<ILogger>(new VoidLogger());
 
-					InjectedLoggerMethod("expect");
+					InjectedLoggerMethod("void");
 
 				});
 
