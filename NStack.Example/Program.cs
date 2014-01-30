@@ -14,11 +14,11 @@ namespace Services
 	//Service helper (optional)
 	public static class Logger
 	{
-		public static ILogger GetInstance () { return Context.Resolve<ILogger>(); } 
+		public static ILogger Current { get { return Context.Resolve<ILogger> (); } } 
 
 		public static void Warning(string message)
 		{
-			GetInstance().Warning (message);
+			Current.Warning (message);
 		}
 	}
 
