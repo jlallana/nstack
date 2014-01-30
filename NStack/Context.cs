@@ -31,7 +31,7 @@ namespace NStack
 		private Context previous = null;
 
 		//Reference to registred services implementations
-		private Dictionary<Type, object> instances = new Dictionary<Type, object>();
+		private Dictionary<Type, Func<object>> instances = new Dictionary<Type, Func<object>>();
 
 		//The las context in the current stackcall
 		[ThreadStatic] private static Context current;
@@ -54,7 +54,7 @@ namespace NStack
 		{
 			try 
 			{
-				return (T)this.instances[typeof(T)];
+				return (T)this.instances[typeof(T)]();
 			}
 			catch(KeyNotFoundException)
 			{
@@ -66,16 +66,21 @@ namespace NStack
 		public static Action Save(Action action)
 		{
 			var save = current;
-			return () => {
-				Context.Create(action, save);
-			};
+			return () => Context.Create(action, save);
 		}
 
-		public static void Register<T>(T instance)
+		//Preserve the current conext of action for threding
+		public static Action<T> Save<T>(Action<T> action)
+		{
+			var save = current;
+			return (param) => Context.Create(() => action(param), save);
+		}
+
+		public static void Register<T>(Func<T> constructor)
 		{
 			try 
 			{
-				current.instances.Add(typeof(T), instance);
+				current.instances.Add(typeof(T), () => constructor());
 			}
 			catch(ArgumentException)
 			{
@@ -85,6 +90,11 @@ namespace NStack
 			{
 				throw new OutOfContextException (typeof(T));
 			}
+		}
+
+		public static void Register<T>(T instance)
+		{
+			Register<T> (() => instance);
 		}
 
 		//Initialization from a context
