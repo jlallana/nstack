@@ -38,10 +38,7 @@ namespace Services
 	{
 		public void Warning (string message)
 		{
-			if (message != "void")
-			{
-				throw new Exception ("expectation exception");
-			}
+
 		}
 	}
 }
@@ -96,7 +93,7 @@ namespace NStack.Example
 
 					Context.Register<ILogger>(new VoidLogger());
 
-					InjectedLoggerMethod("void");
+					InjectedLoggerMethod(null);
 
 				});
 
