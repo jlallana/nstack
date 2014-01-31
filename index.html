@@ -29,11 +29,25 @@
       <div class="inner clearfix">
         <section id="main-content">
           <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to NStack Website.</h3>
+<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Nstack. Combined Inversor of Control.</h3>
 
-<p>This site is under construction. Anyway, the project is active. You can obtain the latest version here compiled the project and its source code.</p>
+<p>First of all, I must apologize for my poor English. Currently I use a translation tool for these texts.</p>  
 
-<pre><code>$ git clone https://github.com/jlallana/nstack</code></pre>
+<p>"Nstack" is an inversor of control mechanism that combines multiple design patterns. It's lightweight (6kb / 150lines) and free software (AGPLv3)</p>  
+
+<p>Works like a implicit dependency injector.</p>  
+<p>Each object receives its dependencies of your service provider without needing to parameterize these objects or adding public properties.</p>  
+<p>In turn that object to send these same agencies all methods which implicitly calling fence .</p>  
+
+<p>To set dependencies and consume from the service provider's similar to a service locator mechanism used .</p>  
+<p>The same rather than maintaining a static location of the depencias , use the context of the call stack to establish and recover such dependencies.</p>  
+
+<p>Also use of the singleton pattern to keep limited the number of instances per context injection just one instance.</p>  
+
+<p>To perform dependency injection should create a context , set dependencies , and implement it.</p>  
+
+<p>Below is shown a small but concrete example.</p>         
+ 
 
 
 
