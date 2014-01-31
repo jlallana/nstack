@@ -2,6 +2,7 @@ using System;
 using NStack;
 using Services;
 using System.Threading;
+using System.Diagnostics;
 
 namespace Services
 {
@@ -11,11 +12,14 @@ namespace Services
 		void Warning(string message);
 	}
 
+
 	//Service helper (optional)
 	public static class Logger
 	{
-		public static ILogger Current { get { return Context.Resolve<ILogger> (); } } 
 
+		public static ILogger Current { [DebuggerHidden] get { return Context.Resolve<ILogger> (); } } 
+
+		[DebuggerHidden]
 		public static void Warning(string message)
 		{
 			Current.Warning (message);
