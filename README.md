@@ -1,4 +1,5 @@
-nstack
+Nstack
 ======
 
-Stack based service locator for .Net
+Combined inversor of control for .Net.
+Full project details at http://jlallana.github.io/nstack/
